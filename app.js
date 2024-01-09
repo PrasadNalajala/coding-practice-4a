@@ -33,6 +33,18 @@ app.get("/players/", async (request, response) => {
   response.send(data);
 });
 
+app.get("/players/:playerId", async (request, response) => {
+  const playerId = request.params.playerId;
+  const query = `
+    SELECT * 
+    FROM cricket_team
+    WHERE 
+    player_id=${playerId}
+    `;
+  const data = await db.get(query);
+  response.send(data);
+});
+
 app.post("/players/", async (request, response) => {
   try {
     const bookDetails = request.body;
@@ -40,10 +52,10 @@ app.post("/players/", async (request, response) => {
     const { playerName, jerseyNumber, role } = bookDetails;
 
     const query = `
-  INSERT INTO cricket_team(playerName,jerseyNumber,role,playerId) VALUES(
+  INSERT INTO cricket_team(player_name,jersey_number,role) VALUES(
       '${playerName}',
       '${jerseyNumber}',
-      '${role}',
+      '${role}'
       
   )
   `;
@@ -53,6 +65,41 @@ app.post("/players/", async (request, response) => {
   } catch (e) {
     console.log(`Getting error ${e}`);
   }
+});
+
+app.put("/players/:playerId/", async (request, response) => {
+  try {
+    const { playerId } = request.params;
+    const playerDetails = request.body;
+    console.log(playerDetails);
+    const { playerName, jerseyNumber, role } = playerDetails;
+    const query = `
+    UPDATE
+    cricket_team
+    SET
+    player_name=${playerName},
+    jersey_number=${jerseyNumber},
+    role=${role}
+    WHERE
+    player_id=${playerId}
+    `;
+    await db.run(query);
+    response.send("Player Details Updated");
+  } catch (e) {
+    console.log(e);
+  }
+});
+
+app.delete("/players/:playerId/", async (request, response) => {
+  const { playerId } = request.params;
+  const query = `
+    DELETE
+    FROM
+    cricket_team
+    WHERE
+    player_id=${playerId}`;
+  db.run(query);
+  response.send("Player Removed");
 });
 
 module.exports = app;
