@@ -1,3 +1,8 @@
+GET http://localhost:3001/players
+
+GET http://localhost:3001/players/:playerId/
+
+
 PUT http://localhost:3001/players/4/
 
 Content-Type: application/json
@@ -8,9 +13,7 @@ Content-Type: application/json
     "role": "All-rounder"
 }
 
-GET http://localhost:3001/players/:playerId/
 
-GET http://localhost:3001/players
 
 
 DELETE http://localhost:3001/players/:playerId/

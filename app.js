@@ -29,8 +29,16 @@ app.get("/players/", async (request, response) => {
     SELECT *
     FROM cricket_team`;
   const data = await db.all(query);
+  const convertDbObjectToResponseObject = (data) => {
+    return {
+      playerId: data.player_id,
+      playerName: data.player_name,
+      jerseyNumber: data.jersey_number,
+      role: data.role,
+    };
+  };
   // console.log(data);
-  response.send(data);
+  response.send(data.map((each) => convertDbObjectToResponseObject(each)));
 });
 
 app.get("/players/:playerId", async (request, response) => {
@@ -42,7 +50,16 @@ app.get("/players/:playerId", async (request, response) => {
     player_id=${playerId}
     `;
   const data = await db.get(query);
-  response.send(data);
+  const convertDbObjectToResponseObject = (data) => {
+    return {
+      playerId: data.player_id,
+      playerName: data.player_name,
+      jerseyNumber: data.jersey_number,
+      role: data.role,
+    };
+  };
+  // console.log(data);
+  response.send(convertDbObjectToResponseObject(data));
 });
 
 app.post("/players/", async (request, response) => {
@@ -77,9 +94,9 @@ app.put("/players/:playerId/", async (request, response) => {
     UPDATE
     cricket_team
     SET
-    player_name=${playerName},
-    jersey_number=${jerseyNumber},
-    role=${role}
+    player_name='${playerName}',
+    jersey_number='${jerseyNumber}',
+    role='${role}'
     WHERE
     player_id=${playerId}
     `;
