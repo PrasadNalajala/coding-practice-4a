@@ -7,6 +7,7 @@ const sqlite3 = require("sqlite3");
 
 const dbPath = path.join(__dirname, "/cricketTeam.db");
 let db = null;
+
 const initializeDb = async () => {
   try {
     db = await open({
